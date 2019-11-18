@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request,redirect
+from flask import Flask, render_template, request, redirect, flash, url_for
+from flask_login._compat import unicode
 from flask_wtf import Form
+from flask_login import LoginManager, UserMixin, login_required
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
-from flask_sqlalchemy import SQLAlchemy
 import json
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@49.235.167.8/Conference'
@@ -11,6 +13,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SECRET_KEY"] = "12345678"
 app.jinja_env.auto_reload = True
+login_manger = LoginManager(app)
+login_manger.login_view = 'login'
 db = SQLAlchemy(app)
 
 
@@ -20,11 +24,23 @@ class LoginForm(Form):
     submit = SubmitField('登录')
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True, nullable=False, autoincrement=True)
     name = db.Column(db.String(32), nullable=False)
-    password = db.Column(db.String(128),nullable=False)
+    password = db.Column(db.String(128), nullable=False)
     inf = db.Column(db.String(1024))
+
+    def get_id(self):
+        return unicode(self.id)
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def is_authenticated(self):
+        return True
 
 
 class Conf(db.Model):
@@ -38,8 +54,8 @@ class Conf(db.Model):
         return '<Conf:(%s,%s)>' % (self.name, self.detail)
 
 
-user1 = User(name='曾庶强', inf='dadadasfsfgfsf',password='123456')
-user2 = User(name='叶琴',inf='啊书法大赛分隔符',password='123456')
+user1 = User(name='曾庶强', inf='dadadasfsfgfsf', password="123456")
+user2 = User(name='叶琴', inf='啊书法大赛分隔符', password="123456")
 confq = Conf(name="fsfefwf", detail='fewqgfgregrgtggwrgewrgewg', compere_id=21)
 confv = Conf(name='dsaddsafefregertg', detail='gegtrghrthrthrh', compere_id=8987)
 
@@ -58,6 +74,11 @@ def Cover2Json(conf: Conf = '', user: User = ''):
             'name': user.name,
             'inf': user.inf
         }
+
+
+@login_manger.user_loader
+def load_user(id):
+    return User.query.get(int(id))
 
 
 @app.route('/')
@@ -82,12 +103,19 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter(User.name == form.name.data).first()
         if user:
-            return redirect('http://www.baidu.com')
+            return redirect(url_for('home'))
         else:
             flash('用户名不存在')
+            return redirect(url_for('login'))
 
     else:
-        return render_template('login.html', form=form)
+        return render_template('form.html', form=form)
+
+
+@app.route('/home', methods=['POST', 'GET'])
+@login_required
+def home():
+    return render_template('home.html')
 
 
 if __name__ == '__main__':
