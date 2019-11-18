@@ -4,25 +4,56 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+    div.login{
+        text-align: center;
+        margin: 0 auto;
+    }
+    table{
+        margin: 0 auto;
+    }
+</style>
 <body>
 {% with ms = get_flashed_messages()  %}
-
-<form method="post">
+<div class="login">
+<h1>login</h1>
+    <br>
+    <form method="post">
 {{ form.hidden_tag() }}
-                name：{{form.name()}}<br>
+    <table>
+        <tr>
+            <td>
+                name：
+            </td>
+            <td>
+                {{form.name()}}<br>
                 {%for e in form.name.errors%}
                 <span style="color: red">*{{e}}</span>
                 {%endfor%}
-                password：{{form.password()}}<br>
+            </td>
+        </tr>
+    <tr>
+        <td>
+             password：
+        </td>
+        <td>  {{form.password()}}<br>
 
                {%for e in form.password.errors%}
                 <span style="color: red">*{{e}}</span>
-                {%endfor%}
-    <input type="submit" value="login"><br>
-{% for m in ms %}
+                {%endfor%}</td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="login"><br></td>
+    </tr>
+    <tr>
+        <td>{% for m in ms %}
     <span>{{ m }}</span>
-{%  endfor%}
+{%  endfor%}</td>
+    </tr>
+    </table>
 </form>
 {% endwith %}
+</div>
+
 </body>
 </html>

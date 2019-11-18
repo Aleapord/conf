@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>一、使用表格和表格属性制作简易表格</title>
+</head>
+<style>
+    h2.table_name{
+        text-align: center;
+    }
+    table{
+        background: #FFFFFF url('img/111.jpeg') no-repeat fixed left top;
+        background-size: contain;
+        text-align: center;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: bold;
+    }
+    table tr td{
+        border-collapse: collapse;
+        border-bottom: 1px solid #000000;
+    }
+    tr.head{
+        color: blue;
+    }
+</style>
+<body>
+<h2 class="table_name">表1第一学期成绩表</h2>
+<table >
+    <tr class="head">
+        <td rowspan="2">序号</td>
+        <td rowspan="2">学号</td>
+        <td rowspan="2">姓名</td>
+        <td colspan="5">第一学期成绩</td>
+    </tr>
+    <tr class="head">
+        <td>英语</td>
+        <td>高数</td>
+        <td>学科导论</td>
+        <td>就业</td>
+        <td>总分</td>
+    </tr>
+    <tr>
+        <td>1</td>
+        <td>1019200101</td>
+        <td>李大宇</td>
+        <td>75</td>
+         <td>76</td>
+        <td>76</td>
+        <td>90</td>
+        <td>395</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>1019200102</td>
+        <td>张子明</td>
+        <td>60</td>
+         <td>45</td>
+        <td>66</td>
+        <td>55</td>
+        <td>303</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td> 1019200103</td>
+        <td>胡大明</td>
+        <td>55</td>
+         <td>68</td>
+        <td>64</td>
+        <td>80</td>
+        <td>343</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>1019200104</td>
+        <td>王不学</td>
+        <td>34</td>
+         <td>87</td>
+        <td>76</td>
+        <td>45</td>
+        <td>309</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>1019200105</td>
+        <td>徐知道</td>
+        <td>67</td>
+        <td>95</td>
+        <td>66</td>
+        <td>90</td>
+        <td>363</td>
+    </tr>
+    <tr class="head">
+        <td colspan="3">课程平均分</td>
+        <td>58.2</td>
+        <td>74.2</td>
+        <td>69.9</td>
+        <td>72</td>
+        <td></td>
+    </tr>
+</table>
+</body>
+</html>
