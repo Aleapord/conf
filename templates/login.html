@@ -41,6 +41,7 @@
                              <p class="password"><i></i>{{ form.password(class="pwd",placeholder="请输入密码") }}</p>
                              <span>{{ form.password.errors[0] }}</span>
                             {{form.submit()}}
+                             <span>{{ get_flashed_messages[0] }}</span>
                             <p class="remember"><input type="checkbox" name="remember">记住密码</p>
                             <p class="regist"><span>没有账号?</span><a href="regist">立即注册</a></p>
                             <div class="clear"></div>

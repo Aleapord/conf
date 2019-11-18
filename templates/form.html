@@ -5,19 +5,24 @@
     <title>Title</title>
 </head>
 <body>
-<form method="post">
+{% with ms = get_flashed_messages()  %}
 
-</form>
- {{ form.hidden_tag() }}
-                name：{{form.name()}}
+<form method="post">
+{{ form.hidden_tag() }}
+                name：{{form.name()}}<br>
                 {%for e in form.name.errors%}
                 <span style="color: red">*{{e}}</span>
                 {%endfor%}
-                password：{{form.password()}}
+                password：{{form.password()}}<br>
 
                {%for e in form.password.errors%}
                 <span style="color: red">*{{e}}</span>
                 {%endfor%}
-    <input type="submit" value="login">
+    <input type="submit" value="login"><br>
+{% for m in ms %}
+    <span>{{ m }}</span>
+{%  endfor%}
+</form>
+{% endwith %}
 </body>
 </html>
