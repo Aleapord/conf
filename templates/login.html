@@ -25,7 +25,7 @@
 <body>
     <div class="container">
         <div class="wrap">
-            <header><em>Login</em><span>会议管理系统</span></header>
+            <header><em>Login</em><span>欢迎登录会议管理系统</span></header>
             <article>
                 <section>
                     <aside>
@@ -40,9 +40,9 @@
 {#                            <p class="password"><i></i><input type="password" name="password" class="pwd" placeholder="请输入密码"></p>#}
                              <p class="password"><i></i>{{ form.password(class="pwd",placeholder="请输入密码") }}</p>
                              <span>{{ form.password.errors[0] }}</span>
-                            {{form.submit()}}
+                            <button>登录</button>
                              <span>{{ get_flashed_messages[0] }}</span>
-                            <p class="remember"><input type="checkbox" name="remember">记住密码</p>
+                            <p class="remember">{{form.remember_me()}}记住我</p>
                             <p class="regist"><span>没有账号?</span><a href="regist">立即注册</a></p>
                             <div class="clear"></div>
 

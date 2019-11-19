@@ -178,5 +178,6 @@ footer p{
 	margin-top: 10px;
 }
 span.message{
+	display: block;
 	text-align: center;
 }

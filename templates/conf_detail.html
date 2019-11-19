@@ -1,0 +1,32 @@
+{% import 'modle.html'as m%}
+
+<!DOCTYPE html>
+<html lang="en">
+{{ m.head(conf.name) }}
+<body>
+{{m.header(current_user.name,current_user.inf)}}
+<div class="main-wrapper">
+	    <section class="cta-section theme-bg-light py-5">
+		    <div class="container text-center">
+			    <h2 class="heading">{{conf.name}}</h2>
+		    </div><!--//container-->
+            <hr size="3">
+	    </section>
+	    <section class="blog-list px-3 py-5 p-md-5">
+		    <div class="container">
+
+
+		    </div>
+	    </section>
+
+	    <footer class="footer text-center py-2 theme-bg-dark">
+
+	       <small class="copyright">曾庶强 6109117179 计算机174班</small>
+
+	    </footer>
+
+    </div><!--//main-wrapper-->
+
+{{ m.foot() }}
+</body>
+</html>
