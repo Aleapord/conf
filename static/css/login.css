@@ -49,7 +49,7 @@ article{
 }
 section{
 	height: 600px;
-	background-image: url("../img/bg.png");
+	background-image: url("/img/bg.png");
 	background-size: auto 100%;
 	background-repeat: no-repeat;
 	position: relative;
@@ -100,13 +100,13 @@ form i{
 	position: absolute;
 }
 .name i{
-	background-image: url("../img/user1.png");
+	background-image: url("/img/user1.png");
 	background-repeat: no-repeat;
 	left: 10px;
 	top: 27px;
 }
 .password i{
-	background-image: url("../img/password1.png");
+	background-image: url("/img/password1.png");
 	background-repeat: no-repeat;
 	left: 10px;
 	top: 29px;
@@ -129,7 +129,7 @@ button{
 .remember input{
 	width: 24px;
 	height: 24px;
-	background-image: url("../img/rememberPassword1.png");
+	background-image: url("/img/rememberPassword1.png");
 	-webkit-appearance: none;
     -moz-appearance: none;
     -o-appearance:none;
@@ -142,7 +142,7 @@ button{
     margin-top: 0px;
 }
 .remember input:checked{	
-	background-image: url("../img/rememberPassword2.png");
+	background-image: url("/img/rememberPassword2.png");
 }
 .remember,.regist{
 	float: left;
@@ -176,4 +176,7 @@ footer p{
 	text-align: center;
 	font-size: 13px;
 	margin-top: 10px;
+}
+span.message{
+	text-align: center;
 }

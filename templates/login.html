@@ -25,7 +25,7 @@
 <body>
     <div class="container">
         <div class="wrap">
-            <header><em>Logo</em><span>╳╳╳技术有限公司</span></header>
+            <header><em>Login</em><span>会议管理系统</span></header>
             <article>
                 <section>
                     <aside>
@@ -47,20 +47,17 @@
                             <div class="clear"></div>
 
                         </form>
+                        {% with ms = get_flashed_messages() %}
+                        {% for m in ms %}
+                        <span class="message">{{ m }}  </span>
+                        {% endfor %}
+                    {% endwith %}
                     </aside>
                    
                 </section>               
             </article>
             <footer>
-                <ul>
-                    <li><a href="#">联系我们</a></li>
-                    <li><a href="#">关于我们</a></li>
-                    <li><a href="#">人才招聘</a></li>
-                    <li><a href="#">友情链接</a></li>
-                    <li><a href="#">公司地址</a></li>
-                    <li><a href="#">关注我们</a></li>
-                </ul>
-                <p>本网站版权归╳╳╳技术有限公司所有，未经许可，不得转载。</p>
+                <p class="inf">曾庶强 6109117179 计算机174班</p>
             </footer>
         </div>
     </div>

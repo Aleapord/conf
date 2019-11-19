@@ -23,7 +23,7 @@
 <body>
     
     <header class="header text-center">	    
-	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">Anthony's Blog</a></h1>
+	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ current_user.name }}</a></h1>
         
 	    <nav class="navbar navbar-expand-lg navbar-dark" >
            
@@ -35,31 +35,23 @@
 				<div class="profile-section pt-3 pt-lg-0">
 				    <img class="profile-image mb-3 rounded-circle mx-auto" src="assets/images/profile.png" alt="image" >			
 					
-					<div class="bio mb-3">Hi, my name is Anthony Doe. Briefly introduce yourself here. You can also provide a link to the about page.<br><a href="about.html">Find out more about me</a></div><!--//bio-->
-					<ul class="social-list list-inline py-3 mx-auto">
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-twitter fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-github-alt fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-stack-overflow fa-fw"></i></a></li>
-			            <li class="list-inline-item"><a href="#"><i class="fab fa-codepen fa-fw"></i></a></li>
-			        </ul><!--//social-list-->
-			        <hr> 
+					<div class="bio mb-3">{{current_user.inf}}<br></div><!--//bio-->
 				</div><!--//profile-section-->
 				
 				<ul class="navbar-nav flex-column text-left">
 					<li class="nav-item active">
-					    <a class="nav-link" href="index.html"><i class="fas fa-home fa-fw mr-2"></i>Blog Home <span class="sr-only">(current)</span></a>
+					    <a class="nav-link" href="/"><i class="fas fa-home fa-fw mr-2"></i>网站主页 </a>
 					</li>
 					<li class="nav-item">
-					    <a class="nav-link" href="blog-post.html"><i class="fas fa-bookmark fa-fw mr-2"></i>Blog Post</a>
+					    <a class="nav-link" href="index"><i class="fas fa-list fa-fw mr-2"></i>会议列表</a>
 					</li>
 					<li class="nav-item">
-					    <a class="nav-link" href="about.html"><i class="fas fa-user fa-fw mr-2"></i>About Me</a>
+					    <a class="nav-link" href="about"><i class="fas fa-user fa-fw mr-2"></i>个人主页</a>
 					</li>
 				</ul>
 				
 				<div class="my-2 my-md-3">
-				    <a class="btn btn-primary" href="#" target="_blank">Get in Touch</a>
+				    <a class="btn btn-primary" href="#" target="_blank">发布会议</a>
 				</div>
 			</div>
 		</nav>
@@ -68,26 +60,21 @@
     <div class="main-wrapper">
 	    <section class="cta-section theme-bg-light py-5">
 		    <div class="container text-center">
-			    <h2 class="heading">DevBlog - A Blog Template Made For Developers</h2>
-			    <div class="intro">Welcome to my blog. Subscribe and get my latest blog post in your inbox.</div>
-			    <form class="signup-form form-inline justify-content-center pt-3">
-                    <div class="form-group">
-                        <label class="sr-only" for="semail">Your email</label>
-                        <input type="email" id="semail" name="semail1" class="form-control mr-md-1 semail" placeholder="Enter email">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Subscribe</button>
-                </form>
+			    <h2 class="heading">会议列表</h2>
 		    </div><!--//container-->
+            <hr color="blcak" size="3">
 	    </section>
 	    <section class="blog-list px-3 py-5 p-md-5">
 		    <div class="container">
+            {% if conf_list %}
                 {% for conf in conf_list %}
                      {{m.item_lis(conf.name,conf.detail,conf.compere_id)}}
                 {% endfor %}
-			    <nav class="blog-nav nav nav-justified my-5">
-				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
-				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
-				</nav>
+            {% endif %}
+{#			    <nav class="blog-nav nav nav-justified my-5">#}
+{#				  <a class="nav-link-prev nav-item nav-link d-none rounded-left" href="#">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>#}
+{#				  <a class="nav-link-next nav-item nav-link rounded" href="blog-list.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>#}
+{#				</nav>#}
 				
 		    </div>
 	    </section>

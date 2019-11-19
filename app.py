@@ -1,9 +1,8 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, redirect, flash, url_for
 from flask_login._compat import unicode
 from flask_wtf import Form
-from flask_login import LoginManager, UserMixin, login_required, login_user,logout_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, current_user
 from wtforms import StringField, PasswordField, SubmitField
-import json
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_url_path='')
@@ -49,49 +48,22 @@ class Conf(db.Model):
     compere_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     compere = db.relationship('User', backref='conf')
 
-    def __repr__(self):
-        return '<Conf:(%s,%s)>' % (self.name, self.detail)
-
-
-user1 = User(name='曾庶强', inf='dadadasfsfgfsf', password="123456")
-user2 = User(name='叶琴', inf='啊书法大赛分隔符', password="123456")
-confq = Conf(name="fsfefwf", detail='fewqgfgregrgtggwrgewrgewg', compere_id=21)
-confv = Conf(name='dsaddsafefregertg', detail='gegtrghrthrthrh', compere_id=8987)
-
-
-def Cover2Json(conf: Conf = '', user: User = ''):
-    if conf is not None:
-        return {
-            'id': conf.id,
-            'name': conf.name,
-            'detail': conf.detail,
-            'compere_id': conf.compere_id
-        }
-    else:
-        return {
-            'id': user.id,
-            'name': user.name,
-            'inf': user.inf
-        }
 
 @login_manger.user_loader
 def load_user(id):
-    return User.query.filter(User.id==id).first()
+    return User.query.get(id)
+
 
 @app.route('/')
 def hello_world():
-    return render_template('sy5-3.html')
+    return render_template('sy3-self.html')
 
 
 @app.route('/index')
+@login_required
 def index():
-    conf_list = [confq, confv]
-    return render_template('index.html', conf_list=conf_list)
-
-
-@app.route('/ss')
-def getAll():
-    return json.dumps(user1.Cover2Json())
+    conf_list = Conf.query.filter(Conf.compere_id==current_user.id)
+    return render_template('index.html', conf_list=conf_list,current_user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -99,23 +71,23 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter(User.name == form.name.data).first()
+        print(user)
         if user:
-            if user.password == form.password.data:
-                login_user(user)
-                return redirect(url_for('home'))
-            flash('密码错误！')
+           if form.password.data == user.password:
+               login_user(user)
+               return redirect(url_for('index'))
+           else:flash('密码错误！')
+           return redirect(url_for('login'))
+        else:
+            flash('用户名不存在')
             return redirect(url_for('login'))
-        flash('用户名不错在！')
-        return redirect(url_for('login'))
+
     else:
         return render_template('login.html', form=form)
 
 
-@app.route('/home', methods=['POST', 'GET'])
-@login_required
-def home():
-    return render_template('home.html')
-
-
+@app.route('/regist',methods=['POSE','GET'])
+def regist():
+        return render_template('signin.html')
 if __name__ == '__main__':
     app.run(debug=True)
