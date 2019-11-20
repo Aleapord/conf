@@ -4,7 +4,7 @@
 				    <div class="media">
 					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{image_path}}" alt="image">
 					    <div class="media-body">
-						    <h3 class="title mb-1"><a href="blog-post.html">{{ name }}</a></h3>
+						    <h3 class="title mb-1"><a href="{{id}}">{{ name }}</a></h3>
 						    <div class="meta mb-1"><span class="date">发布日期</span><span class="comment"><a href="#">发布者：{{compere | get_name}}</a></span></div>
 						    <div class="intro">{{ inf }}</div>
 						    <a class="more-link" href="{{ id }}">前往报名 &rarr;</a>
@@ -38,7 +38,7 @@
 
 {% endmacro %}
 
-{% macro header(name,self_intro) %}
+{% macro header(name,self_intro,icon_path) %}
 
  <header class="header text-center">
 	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ name }}</a></h1>
@@ -51,7 +51,7 @@
 
 			<div id="navigation" class="collapse navbar-collapse flex-column" >
 				<div class="profile-section pt-3 pt-lg-0">
-				    <img class="profile-image mb-3 rounded-circle mx-auto" src="assets/images/profile.png" alt="image" >
+				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{{icon_path}}" alt="image" >
 
 					<div class="bio mb-3">{{self_intro}}<br></div><!--//bio-->
 				</div><!--//profile-section-->
