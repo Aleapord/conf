@@ -5,7 +5,7 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, cur
 from wtforms import StringField, PasswordField, BooleanField
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@49.235.167.8/Conference'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -102,7 +102,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = UserAdmin.query.filter(UserAdmin.name == form.name.data).first() or User.query.filter(
-            User.name == form.name.data)
+            User.name == form.name.data).first()
         print(user)
         if user:
             if form.password.data == user.password:
