@@ -1,11 +1,11 @@
-{% macro item_lis(id,name,inf,compere) %}
+{% macro item_lis(id,name,inf,image_path,compere) %}
 
  <div class="item mb-5">
 				    <div class="media">
-					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="assets/images/blog/blog-post-thumb-1.jpg" alt="image">
+					    <img class="mr-3 img-fluid post-thumb d-none d-md-flex" src="{{image_path}}" alt="image">
 					    <div class="media-body">
 						    <h3 class="title mb-1"><a href="blog-post.html">{{ name }}</a></h3>
-						    <div class="meta mb-1"><span class="date">发布日期</span><span class="comment"><a href="#">发布者：{{compere}}</a></span></div>
+						    <div class="meta mb-1"><span class="date">发布日期</span><span class="comment"><a href="#">发布者：{{compere | get_name}}</a></span></div>
 						    <div class="intro">{{ inf }}</div>
 						    <a class="more-link" href="{{ id }}">前往报名 &rarr;</a>
 					    </div><!--//media-body-->

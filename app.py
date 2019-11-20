@@ -1,7 +1,7 @@
-from flask import Flask, render_template, redirect, flash, url_for, session
+from flask import Flask, render_template, redirect, flash, url_for
 from flask_login._compat import unicode
 from flask_wtf import Form
-from flask_login import LoginManager, UserMixin, login_required, login_user, current_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, current_user,logout_user
 from wtforms import StringField, PasswordField, BooleanField
 from flask_sqlalchemy import SQLAlchemy
 
@@ -82,6 +82,13 @@ class User(db.Model, UserMixin):
 def load_user(user_id):
     return UserAdmin.query.get(int(user_id)) or User.query.get(int(user_id))
 
+def get_name(id):
+    user = User.query.filter(User.id==id).first()
+    if user:
+        return user.name
+    return id
+
+app.add_template_filter(get_name,'get_name')
 
 @app.route('/')
 def hello_world():
@@ -106,9 +113,7 @@ def login():
         print(user)
         if user:
             if form.password.data == user.password:
-                login_user(user)
-                if form.remember_me == True:
-                    session.permanent = True
+                login_user(user,remember=form.remember_me.data)
                 return redirect(url_for('index'))
             else:
                 flash('密码错误！')
@@ -120,6 +125,10 @@ def login():
     else:
         return render_template('login.html', form=form)
 
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 @app.route('/regist', methods=['POSE', 'GET'])
 def regist():
