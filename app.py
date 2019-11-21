@@ -1,12 +1,14 @@
-from flask import Flask, render_template, redirect, flash, url_for
+import os
+from flask import Flask, render_template, redirect, flash, url_for, send_from_directory
 from flask_login._compat import unicode
 from flask_wtf import Form
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
 from wtforms import StringField, PasswordField, BooleanField
 from flask_sqlalchemy import SQLAlchemy
+import xlwt
 
 app = Flask(__name__, static_url_path='')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/Conf'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@49.235.167.8/Conf'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SECRET_KEY"] = "12345678"
@@ -43,10 +45,9 @@ class UserAdmin(db.Model, UserMixin):
 
 
 users = db.Table('users',
-                 db.Column('conf_id',db.Integer,db.ForeignKey('conf.id'),primary_key=True),
-                db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key=True)
+                 db.Column('conf_id', db.Integer, db.ForeignKey('conf.id'), primary_key=True),
+                 db.Column('user_id', db.Integer, db.ForeignKey('user.id'), primary_key=True)
                  )
-
 
 
 class Conf(db.Model):
@@ -55,10 +56,9 @@ class Conf(db.Model):
     icon_path = db.Column(db.String(128), nullable=False)
     detail = db.Column(db.String(1024), nullable=True)
     identify = db.Column(db.String(128), nullable=False)
-    compere_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    compere = db.relationship('User', backref='conf')
-    users_id = db.relationship('User',secondary=users,backref=db.backref('users',lazy='dynamic'))
-
+    compere_id = db.Column(db.Integer, db.ForeignKey('user_admin.id'))
+    compere = db.relationship('UserAdmin', backref='conf')
+    users_id = db.relationship('User', secondary=users, backref=db.backref('confs', lazy='dynamic'))
 
 
 class User(db.Model, UserMixin):
@@ -93,7 +93,7 @@ def load_user(user_id):
 
 
 def get_name(id):
-    user = User.query.filter(User.id == id).first()
+    user = UserAdmin.query.filter(UserAdmin.id == id).first()
     if user:
         return user.name
     return id
@@ -152,7 +152,35 @@ def regist():
 @app.route('/<conf_id>')
 def conf_detail(conf_id):
     conf = Conf.query.filter(Conf.id == conf_id).first()
-    return render_template('conf_detail.html', conf=conf,current_user=current_user)
+    users = conf.users_id or None
+    return render_template('conf_detail.html', conf=conf, current_user=current_user, users=users)
+
+
+@app.route('/export/<conf_id>')
+def export(conf_id):
+    conf = Conf.query.filter(Conf.id == conf_id).first()
+
+    file_name = '%s.xlsx' % conf.name
+    work_book = xlwt.Workbook()
+    work_sheet = work_book.add_sheet('%s参会人员信息表' % conf.name)
+    work_sheet.write(0, 0, '姓名')
+    work_sheet.write(0, 1, '单位')
+    work_sheet.write(0, 2, '电话号码')
+    work_sheet.write(0, 3, '身份证号码')
+    work_sheet.write(0, 4, '性别')
+    work_sheet.write(0, 5, '报名时间')
+    work_sheet.write(0, 6, '安排房间')
+
+    for i, user in enumerate(conf.users_id):
+        work_sheet.write(i + 1, 0, user.name)
+        work_sheet.write(i + 1, 1, user.units)
+        work_sheet.write(i + 1, 2, user.tel)
+        work_sheet.write(i + 1, 3, user.id_card)
+        work_sheet.write(i + 1, 4, user.sex)
+        work_sheet.write(i + 1, 5, str(user.join_time))
+        work_sheet.write(i + 1, 6, user.room)
+    work_book.save(os.path.join('xlsx', file_name))
+    return send_from_directory(os.path.join('xlsx'), file_name)
 
 
 if __name__ == '__main__':

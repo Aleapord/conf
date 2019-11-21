@@ -29,7 +29,34 @@
             <hr size="3">
 	    </section>
     <section class="blog-list px-3 py-5 p-md-5">
-		    <div class="container">
+		    <div class="container align-items-lg-center">
+
+                <table border="1" class="user_table"><tr>
+                    <td>姓名</td>
+                    <td>单位</td>
+                    <td>电话号码</td>
+                    <td>身份证号</td>
+                    <td>性别</td>
+                    <td>报名时间</td>
+                    <td>安排房间</td>
+                </tr>
+                    {% for user in users %}
+
+                    <tr>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.units }}</td>
+                        <td>{{ user.tel }}</td>
+                        <td>{{ user.id_card }}</td>
+                        <td>{{ user.sex }}</td>
+                        <td>{{ user.join_time }}</td>
+                        <td>{{ user.room }}</td>
+                    </tr>
+                    {% endfor %}
+                    <br>
+                    <a href="export/{{ conf.id }}">导出为excel</a>
+
+
+                </table>
 
 		    </div>
 	    </section>
