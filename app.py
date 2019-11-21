@@ -6,7 +6,7 @@ from wtforms import StringField, PasswordField, BooleanField
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_url_path='')
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@49.235.167.8/Conf'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@localhost/Conf'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.config["SECRET_KEY"] = "12345678"
@@ -43,8 +43,8 @@ class UserAdmin(db.Model, UserMixin):
 
 
 users = db.Table('users',
-                 db.Column('conf_id',db.Integer,db.ForeignKey('conf.id')),
-                db.Column('user_id',db.Integer,db.ForeignKey('user.id'))
+                 db.Column('conf_id',db.Integer,db.ForeignKey('conf.id'),primary_key=True),
+                db.Column('user_id',db.Integer,db.ForeignKey('user.id'),primary_key=True)
                  )
 
 
