@@ -9,22 +9,19 @@
 <body>
     <div class="wrapper">
         <article>
-            <h1><em>Logo</em><span>用户注册</span></h1>
+            <h1><em>会议管理系统</em><span>用户注册</span></h1>
             <div class="main">
-                <form>
-                    <div class="tel">
-                        <input type="tel" name="userName" placeholder="手机号"><em>由11个字符组成！</em>
-                    </div>
+                <form class="siginform" method="post">
                     <div class="userName">
-                        <input type="text" name="userName" placeholder="用户名"><em>由5-8个字符组成！</em>
+                        {{ form.name(placeholder="用户名") }}<em>由5-8个字符组成！</em>
                     </div>
                     <div class="password">
-                        <input type="password" name="pwd" placeholder="密码"><em>使用字母、数字、符号两种及以上的组合，8-12个字符</em>
+                        {{ form.password(placeholder="密码",id=pwd1) }}<em>使用字母、数字、符号两种及以上的组合，8-12个字符</em>
                     </div>
                     <div class="againpwd">
-                        <input type="password" name="pwd" placeholder="再次输入密码"><em>两次密码不一致</em>
+                        <label for="pwd2"></label><input type="password" name="pwd" placeholder="再次输入密码" id="pwd2"><em class="msg"></em>
                     </div>
-                    <button>注册</button>
+                    <button onclick="f()">注册</button>
                 </form>
             </div>
         </article>
@@ -33,4 +30,20 @@
             </footer>
     </div>
 </body>
+<script src="js/jquery.min.js"></script>
+<script>
+    function f() {
+        var pwd1 = $("#pw1").value();
+        var pwd2 = $("#pwd2").value();
+        if (pwd1!==pwd2){
+            $("#msg").innerText("两次密码不一致")
+        }
+        else {
+            var form = $(".siginform");
+            form.submit();
+
+        }
+    }
+
+</script>
 </html>

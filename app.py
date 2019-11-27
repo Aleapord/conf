@@ -1,11 +1,12 @@
 import os
-from flask import Flask, render_template, redirect, flash, url_for, send_from_directory
+from flask import Flask, render_template, redirect, flash, url_for, send_from_directory, request
 from flask_login._compat import unicode
 from flask_wtf import Form
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
 from wtforms import StringField, PasswordField, BooleanField
 from flask_sqlalchemy import SQLAlchemy
 import xlwt
+import random
 
 app = Flask(__name__, static_url_path='')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:root@49.235.167.8/Conf'
@@ -16,12 +17,23 @@ app.jinja_env.auto_reload = True
 login_manger = LoginManager(app)
 login_manger.login_view = 'login'
 db = SQLAlchemy(app)
+isAdmin = False
 
 
 class LoginForm(Form):
     name = StringField()
     password = PasswordField()
     remember_me = BooleanField()
+
+
+class SignINForm(Form):
+    name = StringField()
+    password = PasswordField()
+
+
+class addConfForm(Form):
+    name = StringField()
+    inf = StringField()
 
 
 class UserAdmin(db.Model, UserMixin):
@@ -92,11 +104,11 @@ def load_user(user_id):
     return UserAdmin.query.get(int(user_id)) or User.query.get(int(user_id))
 
 
-def get_name(id):
-    user = UserAdmin.query.filter(UserAdmin.id == id).first()
+def get_name(user_id):
+    user = UserAdmin.query.filter(UserAdmin.id == user_id).first()
     if user:
         return user.name
-    return id
+    return user_id
 
 
 app.add_template_filter(get_name, 'get_name')
@@ -113,11 +125,12 @@ def hello_world():
 @login_required
 def index():
     conf_list = Conf.query.all()
-    return render_template('index.html', conf_list=conf_list, current_user=current_user)
+    return render_template('index.html', conf_list=conf_list, current_user=current_user, isAdmin=isAdmin)
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    global isAdmin
     form = LoginForm()
     if form.validate_on_submit():
         user = UserAdmin.query.filter(UserAdmin.name == form.name.data).first() or User.query.filter(
@@ -126,6 +139,8 @@ def login():
         if user:
             if form.password.data == user.password:
                 login_user(user, remember=form.remember_me.data)
+                if isinstance(user, UserAdmin):
+                    isAdmin = True
                 return redirect(url_for('index'))
             else:
                 flash('密码错误！')
@@ -141,6 +156,8 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
+    global isAdmin
+    isAdmin = False
     return redirect(url_for('login'))
 
 
@@ -150,13 +167,15 @@ def regist():
 
 
 @app.route('/<conf_id>')
+@login_required
 def conf_detail(conf_id):
     conf = Conf.query.filter(Conf.id == conf_id).first()
-    users = conf.users_id or None
-    return render_template('conf_detail.html', conf=conf, current_user=current_user, users=users)
+    user_list = conf.users_id or None
+    return render_template('conf_detail.html', conf=conf, current_user=current_user, users=user_list, isAdmin=isAdmin)
 
 
 @app.route('/export/<conf_id>')
+@login_required
 def export(conf_id):
     conf = Conf.query.filter(Conf.id == conf_id).first()
 
@@ -182,6 +201,73 @@ def export(conf_id):
     work_book.save(os.path.join('xlsx', file_name))
     return send_from_directory(os.path.join('xlsx'), file_name)
 
+
+@app.route('/add', methods=['GET', 'POST'])
+@login_required
+def add():
+    form = addConfForm()
+    if form.is_submitted():
+        name = form.name.data
+        inf = form.inf.data
+        need_list = request.form.getlist('need')
+        if not Conf.query.filter(Conf.name == name).first():
+            conf = Conf(name=name, detail=inf, identify=random.randint(0, 10000), icon_path=' ')
+            current_user.conf.append(conf)
+            user = User(name=conf.name, password='-1')
+            for i in need_list:
+                if i == 'join_time':
+                    setattr(user, i, '1998-9-13')
+                else:
+                    setattr(user, i, 1)
+            db.session.add_all([conf, current_user, user])
+            db.session.commit()
+            flash('会议添加成功！')
+            return render_template('add.html', form=form)
+        else:
+            flash('会议已存在！')
+            return render_template('add.html', form=form)
+
+    return render_template('add.html', form=form, isAdmin=isAdmin)
+
+
+@app.route('/del/<conf_id>')
+@login_required
+def del_conf(conf_id):
+    conf = Conf.query.filter(Conf.id == conf_id).first()
+    if not conf.compere_id == current_user.id:
+        flash('您没有权限删除该会议')
+        return redirect(url_for('about'))
+    else:
+        user = User.query.filter(User.name == conf.name).first()
+        db.session.delete(conf)
+        if user:
+            db.session.delete(user)
+        db.session.commit()
+        return render_template('tishi.html', msg='会议删除成功！', target='/about')
+
+
+@app.route('/about')
+@login_required
+def about():
+    if isAdmin:
+        confs = current_user.conf
+    else:
+        confs = current_user.confs
+    return render_template('about.html', confs=confs, current_user=current_user, isAdmin=isAdmin)
+
+
+@app.route('/regist', methods=['POST', 'GET'])
+def sign_in():
+    form = SignINForm()
+    if form.is_submitted():
+        name = form.name.data
+        password = form.password.data
+        user = User(name=name, password=password, icon_path='img/user/%s.png' % name)
+        db.session.add(user)
+        db.session.commit()
+        return redirect(url_for('/'))
+        #return render_template('tishi.html', msg='注册成功！', target='/')
+    return render_template('signin.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)

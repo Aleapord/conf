@@ -30,7 +30,7 @@
 	    </section>
     <section class="blog-list px-3 py-5 p-md-5">
 		    <div class="container align-items-lg-center">
-
+ {% if users %}
                 <table border="1" class="user_table"><tr>
                     <td>姓名</td>
                     <td>单位</td>
@@ -40,6 +40,7 @@
                     <td>报名时间</td>
                     <td>安排房间</td>
                 </tr>
+
                     {% for user in users %}
 
                     <tr>
@@ -51,13 +52,18 @@
                         <td>{{ user.join_time }}</td>
                         <td>{{ user.room }}</td>
                     </tr>
+                        <br>
+
+
                     {% endfor %}
-                    <br>
-                    <a href="export/{{ conf.id }}">导出为excel</a>
+     <button><a href="export/{{ conf.id }}">导出为excel</a></button>
+                {% else %}
+               <p class="text-danger align-content-center">暂无参会人员</p>
+                {% endif %}
+
 
 
                 </table>
-
 		    </div>
 	    </section>
 

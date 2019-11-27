@@ -7,7 +7,6 @@
 						    <h3 class="title mb-1"><a href="{{id}}">{{ name }}</a></h3>
 						    <div class="meta mb-1"><span class="date">发布日期</span><span class="comment"><a href="#">发布者：{{compere | get_name}}</a></span></div>
 						    <div class="intro">{{ inf }}</div>
-						    <a class="more-link" href="{{ id }}">前往报名 &rarr;</a>
 					    </div><!--//media-body-->
 				    </div><!--//media-->
 			    </div><!--//item-->
@@ -33,15 +32,21 @@
     <!-- Theme CSS -->
     <link id="theme-style" rel="stylesheet" href="assets/css/theme-1.css">
 
+
 </head>
+    <style>
+
+    </style>
 
 {% endmacro %}
 
-{% macro header(name,self_intro,icon_path) %}
+{% macro header(name,self_intro,icon_path,isadmin) %}
 
  <header class="header text-center">
 	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ name }}</a></h1>
+     {% if isadmin %}
      <p class="text-warning">您是系统管理员</p>
+     {% endif %}
 
 	    <nav class="navbar navbar-expand-lg navbar-dark" >
 
@@ -53,22 +58,21 @@
 				<div class="profile-section pt-3 pt-lg-0">
 				    <img class="profile-image mb-3 rounded-circle mx-auto" src="{{icon_path}}" alt="image" >
 
-					<div class="bio mb-3">{{self_intro}}<br></div><!--//bio-->
+{#					<div class="bio mb-3">{{self_intro}}<br></div><!--//bio-->#}
 				</div><!--//profile-section-->
 
 				<ul class="navbar-nav flex-column text-left">
 					<li class="nav-item active">
-					    <a class="nav-link" href="/"><i class="fas fa-home fa-fw mr-2"></i>网站主页 </a>
-					</li>
-					<li class="nav-item">
 					    <a class="nav-link" href="index"><i class="fas fa-list fa-fw mr-2"></i>会议列表</a>
 					</li>
 					<li class="nav-item">
 					    <a class="nav-link" href="about"><i class="fas fa-user fa-fw mr-2"></i>个人主页</a>
 					</li>
+                    {% if isadmin %}
                     <li class="nav-item">
 					    <a class="nav-link" href="add"><i class="fas fa-plus fa-fw mr-2"></i>添加会议</a>
 					</li>
+                    {% endif %}
 				</ul>
 
 				<div class="my-2 my-md-3">
