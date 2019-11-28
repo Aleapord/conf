@@ -34,6 +34,8 @@ class SignINForm(Form):
 class addConfForm(Form):
     name = StringField()
     inf = StringField()
+    spot =StringField()
+    hotel = StringField()
 
 
 class UserAdmin(db.Model, UserMixin):
@@ -41,8 +43,6 @@ class UserAdmin(db.Model, UserMixin):
     name = db.Column(db.String(32), nullable=False)
     icon_path = db.Column(db.String(128), nullable=False, default='assets/images/profile.png')
     password = db.Column(db.String(128), nullable=False)
-    inf = db.Column(db.String(1024))
-
     def get_id(self):
         return unicode(self.id)
 
@@ -68,6 +68,8 @@ class Conf(db.Model):
     icon_path = db.Column(db.String(128), nullable=False)
     detail = db.Column(db.String(1024), nullable=True)
     identify = db.Column(db.String(128), nullable=False)
+    spot = db.Column(db.String(128))
+    hotel = db.Column(db.String(128))
     compere_id = db.Column(db.Integer, db.ForeignKey('user_admin.id'))
     compere = db.relationship('UserAdmin', backref='conf')
     users_id = db.relationship('User', secondary=users, backref=db.backref('confs', lazy='dynamic'))
@@ -78,7 +80,6 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(32), nullable=False)
     icon_path = db.Column(db.String(128), nullable=False, default='assets/images/profile.png')
     password = db.Column(db.String(128), nullable=False)
-    inf = db.Column(db.String(1024))
     units = db.Column(db.String(128))
     id_card = db.Column(db.String(32))
     tel = db.Column(db.String(16))
@@ -161,11 +162,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-@app.route('/regist', methods=['POSE', 'GET'])
-def regist():
-    return render_template('signin.html')
-
-
 @app.route('/<conf_id>')
 @login_required
 def conf_detail(conf_id):
@@ -209,9 +205,11 @@ def add():
     if form.is_submitted():
         name = form.name.data
         inf = form.inf.data
+        hotel = form.hotel.data
+        spot = form.spot.data
         need_list = request.form.getlist('need')
         if not Conf.query.filter(Conf.name == name).first():
-            conf = Conf(name=name, detail=inf, identify=random.randint(0, 10000), icon_path=' ')
+            conf = Conf(name=name, detail=inf, hotel=hotel,spot=spot,identify=random.randint(0, 10000), icon_path=' ')
             current_user.conf.append(conf)
             user = User(name=conf.name, password='-1')
             for i in need_list:
@@ -265,9 +263,21 @@ def sign_in():
         user = User(name=name, password=password, icon_path='img/user/%s.png' % name)
         db.session.add(user)
         db.session.commit()
-        return redirect(url_for('/'))
-        #return render_template('tishi.html', msg='注册成功！', target='/')
+        return render_template('tishi.html', msg='注册成功！', target='/')
     return render_template('signin.html', form=form)
+
+
+@app.route('/apply/<conf_id>', methods=['GET', 'POST'])
+@login_required
+def apply(conf_id):
+    conf = Conf.query.filter(Conf.id == conf_id).first()
+    if request.method == 'POST':
+        #在此处完善用户提交数据
+        conf.users_id.append(current_user)
+        db.session.add_all([current_user,conf])
+        db.session.commit()
+    needed = User.query.filter(User.name == conf.name).first()
+    return render_template('apply.html', cu=current_user, needed=needed)
 
 if __name__ == '__main__':
     app.run(debug=True)

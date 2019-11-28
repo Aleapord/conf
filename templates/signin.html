@@ -21,7 +21,7 @@
                     <div class="againpwd">
                         <label for="pwd2"></label><input type="password" name="pwd" placeholder="再次输入密码" id="pwd2"><em class="msg"></em>
                     </div>
-                    <button onclick="f()">注册</button>
+                    <button>注册</button>
                 </form>
             </div>
         </article>
@@ -32,18 +32,13 @@
 </body>
 <script src="js/jquery.min.js"></script>
 <script>
-    function f() {
-        var pwd1 = $("#pw1").value();
-        var pwd2 = $("#pwd2").value();
-        if (pwd1!==pwd2){
-            $("#msg").innerText("两次密码不一致")
-        }
-        else {
-            var form = $(".siginform");
-            form.submit();
-
-        }
-    }
+   $("#pwd2").blur(function () {
+       var pwd1 = $("#pwd1").val();
+       var pwd2 = $("#pwd2").val();
+       if(pwd1!==pwd2){
+           $(".msg").innerText="两次输入密码不一致！";
+       }
+   })
 
 </script>
 </html>

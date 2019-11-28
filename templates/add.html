@@ -4,7 +4,7 @@
 <html lang="en">
 {{ m.head('添加会议') }}
 <body>
-{{m.header(current_user.name,current_user.inf,isAdmin)}}
+{{m.header(current_user.name,current_user.icon_path,isAdmin)}}
  <div class="main-wrapper">
 	    <section class="cta-section theme-bg-light py-5">
 		    <div class="container text-center">
@@ -23,31 +23,25 @@
                        {{ form.name() }}
                    </td>
                </tr>
-               <tr>
-                   <td colspan="2">
-                       {% for e in form.name.errors %}
-                       <p style="color: red">{{ e }}</p>
-                       {% endfor %}
-                   </td>
-               </tr>
            <tr>
                <td>会议介绍：</td>
                <td>{{ form.inf() }}</td>
            </tr>
-           <tr>
-               <td colspan="2">
-                   {% for e in form.inf.errors %}
-                   <p style="color: red">{{ e }}</p>
-                   {% endfor %}
-               </td>
-           </tr>
+                    <tr>
+                        <td>会议地点：</td>
+                        <td>{{ form.spot }}</td>
+                    </tr>
+                    <tr>
+                        <td>会议宾馆：</td>
+                        <td>{{ form.hotel }}</td>
+                    </tr>
            </table>
                 选择用户需要提交得的信息：<br>
                     <input type="checkbox" value="units" name="need">单位
                     <br><input type="checkbox" value="tel" name="need">电话号码
                     <br><input type="checkbox" value="id_card" name="need">身份证号
                     <br><input type="checkbox" value="sex" name="need">性别
-                <br><input type="checkbox" value="join_time" name="need">报名时间
+                    <br><input type="checkbox" value="join_time" name="need">报名时间
                     <br><input type="checkbox" value="room" name="need">是否安排房间
                     <br>
                     <input type="submit" value="提交">
@@ -59,11 +53,7 @@
 		    </div>
 	    </section>
 
-	    <footer class="footer text-center py-2 theme-bg-dark">
-
-	       <small class="copyright">曾庶强 6109117179 计算机174班</small>
-
-	    </footer>
+	   {{m.footer()}}
 
     </div><!--//main-wrapper-->
 </body>

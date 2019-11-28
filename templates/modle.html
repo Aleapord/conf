@@ -40,7 +40,7 @@
 
 {% endmacro %}
 
-{% macro header(name,self_intro,icon_path,isadmin) %}
+{% macro header(name,icon_path,isadmin) %}
 
  <header class="header text-center">
 	    <h1 class="blog-name pt-lg-4 mb-0"><a href="index.html">{{ name }}</a></h1>
@@ -108,4 +108,12 @@
 
     <!-- Style Switcher (REMOVE ON YOUR PRODUCTION SITE) -->
     <script src="assets/js/demo/style-switcher.js"></script>
+{% endmacro %}
+
+{% macro footer() %}
+ <footer class="footer text-center py-2 theme-bg-dark fixed-bottom">
+
+	       <small class="copyright">曾庶强 6109117179 计算机174班</small>
+
+	    </footer>
 {% endmacro %}

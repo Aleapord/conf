@@ -4,7 +4,7 @@
 {{ m.head('会议管理系统') }}
 <body>
     
-   {{m.header(current_user.name,current_user.inf,current_user.icon_path,isAdmin)}}
+   {{m.header(current_user.name,current_user.icon_path,isAdmin)}}
     
     <div class="main-wrapper">
 	    <section class="cta-section theme-bg-light py-5">
@@ -28,11 +28,7 @@
 		    </div>
 	    </section>
 	    
-	    <footer class="footer text-center py-2 theme-bg-dark">
-		   
-	       <small class="copyright">曾庶强 6109117179 计算机174班</small>
-		   
-	    </footer>
+	   {{ m.footer() }}
     
     </div><!--//main-wrapper-->
     

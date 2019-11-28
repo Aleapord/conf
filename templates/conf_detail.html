@@ -5,7 +5,7 @@
 {{ m.head(conf.name) }}
 <body>
 <link rel="stylesheet" href="css/comment.css">
-{{m.header(current_user.name,current_user.inf,current_user.icon_path)}}
+{{m.header(current_user.name,current_user.icon_path,isAdmin)}}
 <div class="main-wrapper">
 	    <section class="cta-section theme-bg-light py-5">
 		    <div class="container text-center">
@@ -16,10 +16,16 @@
 	    <section class="blog-list px-3 py-5 p-md-5">
 		    <div class="container">
                 <div class="img"><img src="{{ conf.icon_path }}" alt="{{ conf.name }}"></div>
-                <p class="intro">{{ conf.detail }}</p><br><p class="intro float-left">
+                <label for="intro">会议介绍：</label><p class="intro" id="intro">{{ conf.detail }}</p><br>
+              <div style="width: 100%"> <p class="intro float-left">
+                <br>
                 会议组织者：{{ conf.compere_id|get_name }}
-            </p>
-            <p class="intro float-right">会议唯一编号:{{ conf.identify }}</p>
+            </p></div>
+                <div style="width: 100%"> <p class="intro float-left">
+                <br>
+                会议地点：{{ conf.spot }}
+            </p></div>
+            <p class="intro float-right">宾饭：{{ conf.hotel }}</p>
 		    </div>
 	    </section>
      <section class="cta-section theme-bg-light py-5">
@@ -56,7 +62,7 @@
 
 
                     {% endfor %}
-     <button><a href="export/{{ conf.id }}">导出为excel</a></button>
+
                 {% else %}
                <p class="text-danger align-content-center">暂无参会人员</p>
                 {% endif %}
@@ -64,16 +70,15 @@
 
 
                 </table>
+                <button class="btn float-left" onclick="function f() {
+                  window.open('export/{{ conf.id }}')
+                }">导出为excel</button>
+            <button class="btn float-right" onclick="function f() {
+                  window.open('apply/{{ conf.id }}')
+                }">去报名</button>
 		    </div>
 	    </section>
-
-
-	    <footer class="footer text-center py-2 theme-bg-dark">
-
-	       <small class="copyright">曾庶强 6109117179 计算机174班</small>
-
-	    </footer>
-
+{{ m.footer() }}
     </div><!--//main-wrapper-->
 
 {{ m.foot() }}
